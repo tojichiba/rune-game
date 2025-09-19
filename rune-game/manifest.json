@@ -3,11 +3,11 @@
   "description": "a larp-project to use wowomouse to access a magical portal. - rune-game/rune-game/index.html at main · tojichiba/rune-game",
   "dir": "ltr",
   "display": "standalone",
-  "name": "GitHub",
-  "orientation": "any",
+  "name": "Nicodemus_Runes",
+  "orientation": "landscape",
   "scope": "/",
-  "short_name": "GitHub",
-  "start_url": "/",
+  "short_name": "Nic_Rune",
+  "start_url": "/index.html",
   "theme_color": "#1e2327",
   "icons": [
     {
@@ -18,7 +18,7 @@
       "src": "https://github.githubassets.com/assets/pinned-octocat-093da3e6fa40.svg"
     },
     {
-      "src": "https://opengraph.githubassets.com/0e3c7f8f7f85832220b2edda26af827577f39fbde41f6411c22e7d047678f89b/tojichiba/rune-game",
+      "src": "https://opengraph.githubassets.com/89f2ad3e117c607c64beb4a5a644a1aad55ccca0c8d161538216ce5ddc4a0c84/tojichiba/rune-game",
       "type": "image/png",
       "sizes": "1200x600"
     },
@@ -31,5 +31,6 @@
       "src": "https://github.com/favicon.ico",
       "type": "image/x-icon"
     }
-  ]
+  ],
+  "id": "Nicodemus_Rune_Access"
 }
