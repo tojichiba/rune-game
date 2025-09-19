@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Magische Runen</title>
+  <style>
+  @font-face {
+  font-family: 'YourRuneFont';
+  src: url('runes.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      font-family: 'YourRuneFont', sans-serif; /* Rune-Font einfügen */
+      background: radial-gradient(circle at center, rgba(50,50,80,0.8), rgba(10,10,20,1));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      transition: background 2s;
+    }
+
+    body::before, body::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(150,150,255,0.2), transparent 70%);
+      animation: swirl 60s infinite linear;
+      filter: blur(150px);
+      z-index: 0;
+      transition: opacity 2s;
+    }
+    body::after { animation-direction: reverse; }
+    @keyframes swirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .circle {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      z-index: 1;
+      transition: opacity 2s;
+    }
+
+    .rune {
+      position: absolute;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.3s, color 0.3s, text-shadow 0.3s, opacity 2s;
+      text-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan;
+      animation: floatRotate 8s infinite linear;
+      transform-origin: center center;
+    }
+
+    @keyframes floatRotate {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(-5deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .rune:hover {
+      transform: scale(1.5);
+      color: cyan;
+      text-shadow: 0 0 20px cyan, 0 0 40px cyan, 0 0 60px cyan;
+    }
+  </style>
+</head>
+<body>
+  <div class="circle" id="circle"></div>
+
+  <script>
+    const runes = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T"];
+    const correctSequence = ["N","I","C","O"];
+    let currentIndex = 0;
+
+    const circle = document.getElementById("circle");
+    const radius = 200; // für 1280x720 optimiert
+    const centerX = 200; // halbe Kreisgröße
+    const centerY = 200;
+
+    // Audio für Fade-In
+    const fadeAudio = new Audio('fadein.mp3');
+    fadeAudio.volume = 0.5;
+	// Audio für Erfolg
+	const successAudio = new Audio('success.mp3');
+	successAudio.volume = 0.5; // Lautstärke anpassen
+	
+    function placeRunes() {
+      circle.innerHTML = '';
+      runes.forEach((rune, i) => {
+        const angle = (i / runes.length) * 2 * Math.PI;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
+        const el = document.createElement("div");
+        el.classList.add("rune");
+        el.textContent = rune;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.style.transform = `translate(-50%, -50%) rotate(0deg)`;
+        el.style.opacity = 0;
+
+        // Fade-In Animation
+        setTimeout(() => {
+          el.style.transition = 'opacity 1s';
+          el.style.opacity = 1;
+          fadeAudio.currentTime = 0;
+          fadeAudio.play();
+        }, 100);
+
+        el.addEventListener("click", () => {
+          if (rune === correctSequence[currentIndex]) {
+            el.style.color = "lime";
+            el.style.textShadow = "0 0 20px lime, 0 0 40px lime, 0 0 60px lime";
+            currentIndex++;
+             if (currentIndex === correctSequence.length) {
+              // Erfolgreiche Eingabe → Sound + Fade-Out
+              successAudio.currentTime = 0;
+              successAudio.play();
+              setTimeout(() => {
+                document.querySelectorAll('.rune').forEach(r => r.style.opacity = '0');
+                setTimeout(() => {
+                  currentIndex = 0;
+                  placeRunes(); // Fade-In erneut
+                }, 1000);
+              }, 1000);
+            }
+          } else {
+            currentIndex = 0;
+            document.querySelectorAll(".rune").forEach(r => {
+              r.style.color = "white";
+              r.style.textShadow = "0 0 10px cyan, 0 0 20px cyan, 0 0 30px cyan";
+            });
+          }
+        });
+
+        circle.appendChild(el);
+      });
+    }
+
+    placeRunes();
+  </script>
+</body>
+</html>
